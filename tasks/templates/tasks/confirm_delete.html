@@ -1,0 +1,14 @@
+{% extends 'tasks/base.html' %}
+{% block title %}Confirm Delete — TaskFlow{% endblock %}
+
+{% block content %}
+<div class="card narrow-card">
+    <h2>Delete {{ type }}?</h2>
+    <p>Are you sure you want to permanently delete <strong>"{{ object }}"</strong>?</p>
+    <form method="post" class="card-actions">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

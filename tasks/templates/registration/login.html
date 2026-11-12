@@ -1,0 +1,14 @@
+{% extends 'tasks/base.html' %}
+{% block title %}Login — TaskFlow{% endblock %}
+
+{% block content %}
+<div class="card narrow-card">
+    <h2>Sign In</h2>
+    <form method="post" class="stack-form">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+    <p class="muted" style="margin-top: 1rem;">Need an account? <a href="{% url 'register' %}">Register here</a>.</p>
+</div>
+{% endblock %}

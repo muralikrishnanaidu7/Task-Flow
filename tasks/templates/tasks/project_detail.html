@@ -1,0 +1,63 @@
+{% extends 'tasks/base.html' %}
+{% block title %}{{ project.title }} — TaskFlow{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <a href="{% url 'dashboard' %}" class="back-link">&larr; All Projects</a>
+        <h1>{{ project.title }}</h1>
+        <p class="muted">{{ project.description }}</p>
+    </div>
+</div>
+
+<div class="card add-task-bar">
+    <form method="post" class="inline-form">
+        {% csrf_token %}
+        {{ form.title }}
+        {{ form.priority }}
+        {{ form.due_date }}
+        <button type="submit" class="btn btn-primary">Add Task</button>
+    </form>
+</div>
+
+<div class="filter-bar">
+    <input type="text" id="taskSearch" placeholder="Filter tasks by keyword...">
+    <select id="statusFilter">
+        <option value="all">All Tasks</option>
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+    </select>
+</div>
+
+<div class="task-list" id="taskList">
+    {% for task in tasks %}
+        <div class="card task-item {% if task.is_completed %}completed{% endif %}"
+             data-status="{% if task.is_completed %}completed{% else %}pending{% endif %}"
+             data-title="{{ task.title|lower }}">
+            <div class="task-left">
+                <input type="checkbox"
+                       class="task-checkbox"
+                       data-url="{% url 'task_toggle' task.pk %}"
+                       {% if task.is_completed %}checked{% endif %}>
+                <div>
+                    <span class="task-title">{{ task.title }}</span>
+                    <div class="task-meta">
+                        <span class="badge badge-{{ task.priority }}">{{ task.get_priority_display }}</span>
+                        {% if task.due_date %}
+                            <span class="muted">Due: {{ task.due_date }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="task-actions">
+                <a href="{% url 'task_edit' task.pk %}" class="btn-link">Edit</a>
+                <a href="{% url 'task_delete' task.pk %}" class="btn-danger-text">Delete</a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="card empty-state">
+            <p>No tasks in this project yet. Add one above!</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
